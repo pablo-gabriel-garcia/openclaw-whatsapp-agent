@@ -126,6 +126,14 @@ app.get('/', (req, res) => {
   });
 });
 
+// ── Keep-alive: evita que Render duerma el servidor ──────────────────────────
+const SELF_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+setInterval(() => {
+  fetch(`${SELF_URL}/`)
+    .then(() => console.log('[KEEP-ALIVE] Ping enviado ✅'))
+    .catch(err => console.log('[KEEP-ALIVE] Error:', err.message));
+}, 4 * 60 * 1000); // cada 4 minutos
+
 app.listen(PORT, () => {
   console.log(`[INICIO] ✅ Agente OpenClaw corriendo en puerto ${PORT}`);
   console.log(`[INICIO] Webhook disponible en: /webhook`);
